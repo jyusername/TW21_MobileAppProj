@@ -74,6 +74,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             position: relative;
             bottom: 0;
             width: 100%;
+            margin-top: 20px;
         }
         .btn-primary {
             background-color: #007bff;
@@ -82,13 +83,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </style>
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-dark">
+<nav class="navbar navbar-expand-lg navbar-dark">
         <a class="navbar-brand" href="index.php">Video Rental</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav ml-auto">
+        <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="filter_movies.php">Filter Movies</a>
+                </li>
                 <li class="nav-item">
                     <a class="nav-link" href="index.php?page=view">View Videos</a>
                 </li>
@@ -98,6 +103,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <li class="nav-item">
                     <a class="nav-link" href="logout.php">Logout</a>
                 </li>
+
             </ul>
         </div>
     </nav>
@@ -142,9 +148,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                 <input type="text" name="price" class="form-control" required>
                             </div>
                             <div class="form-group">
-                                <label for="genre">Genre</label>
-                                <input type="text" name="genre" class="form-control" required>
-                            </div>
+                                    <label for="genre">Genre</label>
+                                    <select class="form-control" id="genre" name="genre" required>
+                                        <option value="drama">Drama</option>
+                                        <option value="action">Action</option>
+                                        <option value="fantasy">Fantasy</option>
+                                        <option value="horror">Horror</option>
+                                    </select>
+                                </div>
                             <div class="form-group">
                                 <label for="format">Format</label>
                                 <select name="format" class="form-control" required>
