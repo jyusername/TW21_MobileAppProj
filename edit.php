@@ -30,6 +30,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $genre = $_POST['genre'];
     $format = $_POST['format']; // Added format
 
+
     editVideo($video_id, $title, $director, $release_year, $image, $price, $genre, $format); // Updated to include format
 
     header("Location: movie_details.php?id=" . $video_id);

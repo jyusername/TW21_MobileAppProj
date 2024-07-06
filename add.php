@@ -5,27 +5,35 @@ if (session_status() == PHP_SESSION_NONE) {
 
 require 'functions.php';
 
+$success_message = '';
+$error_message = '';
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // Retrieve form data
     $title = $_POST['title'];
     $director = $_POST['director'];
     $release_year = $_POST['release_year'];
     $image = $_POST['image'];
     $price = $_POST['price'];
     $genre = $_POST['genre'];
-    $format = $_POST['format']; // New line to retrieve format
+    $format = $_POST['format'];
+    $copies = $_POST['copies'];
 
-    $result = addVideo($title, $director, $release_year, $image, $price, $genre, $format);
+    // Add video using the addVideo function
+    $result = addVideo($title, $director, $release_year, $image, $price, $genre, $format, $copies);
 
+    // Check result and set appropriate messages
     if ($result) {
         $success_message = 'Video added successfully.';
     } else {
-        $error_message = 'Failed to add video.';
+        $error_message = 'Failed to add video. Please check your input.';
     }
 }
 ?>
 
 <!DOCTYPE html>
 <html>
+
 <head>
     <title>Add Video</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
@@ -40,32 +48,40 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             flex-direction: column;
             min-height: 100vh;
         }
+
         .navbar {
             background-color: rgba(0, 0, 0, 1);
         }
+
         .navbar-brand {
             font-weight: bold;
             font-size: 24px;
             color: #fff !important;
         }
+
         .nav-link {
             color: #fff !important;
         }
+
         .add-container {
             margin-top: 20px;
             flex: 1;
             display: flex;
             justify-content: center;
         }
+
         .card {
             background-color: rgba(0, 0, 0, 0.7);
             color: #fff;
             border: none;
             border-radius: 10px;
             padding: 20px;
-            width: 80%; /* Adjust the width of the card */
-            max-width: 800px; /* Max width to ensure it doesn't get too large */
+            width: 80%;
+            /* Adjust the width of the card */
+            max-width: 800px;
+            /* Max width to ensure it doesn't get too large */
         }
+
         .footer {
             background-color: rgba(0, 0, 0, 1);
             color: #fff;
@@ -76,14 +92,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             width: 100%;
             margin-top: 20px;
         }
+
         .btn-primary {
             background-color: #007bff;
             border: none;
         }
     </style>
 </head>
+
 <body>
-<nav class="navbar navbar-expand-lg navbar-dark">
+    <nav class="navbar navbar-expand-lg navbar-dark">
         <a class="navbar-brand" href="index.php">Video Rental</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
             aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -141,30 +159,35 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                 <label for="image">Image URL</label>
                                 <input type="text" name="image" class="form-control" required>
                             </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="price">Price</label>
+                            <input type="text" name="price" class="form-control" required>
                         </div>
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="price">Price</label>
-                                <input type="text" name="price" class="form-control" required>
-                            </div>
-                            <div class="form-group">
-                                    <label for="genre">Genre</label>
-                                    <select class="form-control" id="genre" name="genre" required>
-                                        <option value="drama">Drama</option>
-                                        <option value="action">Action</option>
-                                        <option value="fantasy">Fantasy</option>
-                                        <option value="horror">Horror</option>
-                                    </select>
-                                </div>
-                            <div class="form-group">
-                                <label for="format">Format</label>
-                                <select name="format" class="form-control" required>
-                                    <option value="DVD">DVD</option>
-                                    <option value="Blu-ray">Blu-ray</option>
-                                    <option value="Digital">Digital</option>
-                                </select>
-                            </div>
-                            <button type="submit" class="btn btn-primary">Add Video</button>
+                        <div class="form-group">
+                            <label for="genre">Genre</label>
+                            <select class="form-control" id="genre" name="genre" required>
+                                <option value="drama">Drama</option>
+                                <option value="action">Action</option>
+                                <option value="fantasy">Fantasy</option>
+                                <option value="horror">Horror</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="format">Format</label>
+                            <select name="format" class="form-control" required>
+                                <option value="DVD">DVD</option>
+                                <option value="Blu-ray">Blu-ray</option>
+                                <option value="Digital">Digital</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="copies">Number of Copies Available</label>
+                            <input type="number" name="copies" class="form-control" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Add Video</button>
                         </form>
                     </div>
                 </div>
@@ -182,5 +205,5 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
+
 </html>
-                    

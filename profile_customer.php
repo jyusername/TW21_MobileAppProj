@@ -4,14 +4,24 @@ if (session_status() == PHP_SESSION_NONE) {
 }
 
 require 'functions.php';
+
+// Check if user is logged in as a customer
+if (!isset($_SESSION['username']) || $_SESSION['role'] !== 'customer') {
+    header("Location: login.php");
+    exit;
+}
+
 $videos = getVideos();
+
 ?>
 
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
-    <title>Video Rental</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Profile</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <style>
@@ -39,17 +49,12 @@ $videos = getVideos();
             color: #fff !important;
         }
 
-
-        .hero-section {
-            background-color: rgba(0, 0, 0, 0.6);
-            padding: 70px 0;
-            text-align: center;
-            color: #fff;
-        }
-
-        .video-container {
+        .container {
             margin-top: 20px;
             flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
 
         .card {
@@ -58,8 +63,19 @@ $videos = getVideos();
             border: none;
             border-radius: 10px;
             padding: 20px;
-            margin-bottom: 40px;
-            height: 450px;
+            width: 80%;
+            max-width: 900px;
+            margin-bottom: 20px;
+        }
+
+        .card-title {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .card-body {
+            padding: 0;
         }
 
         .footer {
@@ -73,25 +89,15 @@ $videos = getVideos();
             margin-top: 20px;
         }
 
-        .btn-primary,
-        .btn-danger,
-        .btn-warning,
-        .btn-success {
-            margin-right: 10px;
-        }
-
-        .no-videos {
-            background-color: rgba(255, 255, 255, 0.1);
-            color: #fff;
-            padding: 8px;
-            border-radius: 5px;
-            text-align: center;
+        .btn-primary {
+            background-color: #007bff;
+            border: none;
         }
     </style>
 </head>
 
 <body>
-<nav class="navbar navbar-expand-lg navbar-dark">
+    <nav class="navbar navbar-expand-lg navbar-dark">
         <a class="navbar-brand" href="index.php">Video Rental</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
             aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -103,48 +109,37 @@ $videos = getVideos();
                     <a class="nav-link" href="filter_movies.php">Search Video</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="index.php?page=view">View Videos</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="add.php">Add Video</a>
+                    <a class="nav-link" href="profile_customer.php">Profile</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="logout.php">Logout</a>
                 </li>
-
             </ul>
         </div>
     </nav>
 
-    <div class="hero-section">
-        <h1>Welcome to Video Rental</h1>
-        <p>Your one-stop destination for renting your favorite movies</p>
-    </div>
-
-    <div class="video-container container">
-        <?php if (!empty($videos)): ?>
-            <div class="row justify-content-center">
-                <?php foreach ($videos as $video): ?>
-                    <div class="col-md-4">
-                        <div class="card">
-                            <img src="<?php echo $video['image']; ?>" class="card-img-top" alt="..."
-                                style="height: 200px; object-fit: cover;">
-                            <div class="card-body">
-                                <h5 class="card-title"><?php echo $video['title']; ?></h5>
-                                <p class="card-text">Directed by: <?php echo $video['director']; ?></p>
-                                <p class="card-text">Release Year: <?php echo $video['release_year']; ?></p>
-                                <p class="card-text">Copies Available: <?php echo $video['copies']; ?></p>
-                                <a href="movie_details.php?id=<?php echo $video['id']; ?>" class="btn btn-primary">Details</a>
-                            </div>
-                        </div>
-                    </div>
-                <?php endforeach; ?>
+    <div class="container">
+        <?php foreach ($videos as $video): ?>
+            <div class="card">
+                <div class="card-body">
+                    <h3 class="card-title"><?php echo $video['title']; ?></h3>
+                    <p><strong>Director:</strong> <?php echo $video['director']; ?></p>
+                    <p><strong>Release Year:</strong> <?php echo $video['release_year']; ?></p>
+                    <p><strong>Genre:</strong> <?php echo $video['genre']; ?></p>
+                    <p><strong>Format:</strong> <?php echo $video['format']; ?></p>
+                    <p><strong>Price:</strong> <?php echo $video['price']; ?></p>
+                    <p><strong>Copies Available:</strong> <?php echo $video['copies']; ?></p>
+                    <?php if (!$video['rented']): ?>
+                        <form action="rent.php" method="post">
+                            <input type="hidden" name="video_id" value="<?php echo $video['id']; ?>">
+                            <button type="submit" class="btn btn-primary">Rent</button>
+                        </form>
+                    <?php else: ?>
+                        <p><em>This video is currently rented out.</em></p>
+                    <?php endif; ?>
+                </div>
             </div>
-        <?php else: ?>
-            <div class="no-videos">
-                <p>No videos available. Please add some videos.</p>
-            </div>
-        <?php endif; ?>
+        <?php endforeach; ?>
     </div>
 
     <div class="footer">
@@ -154,4 +149,8 @@ $videos = getVideos();
     </div>
 
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+
+</html>
