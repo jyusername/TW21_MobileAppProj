@@ -72,7 +72,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             border-radius: 10px;
             padding: 20px;
             width: 50%; /* Adjust the width to make the card smaller */
-            max-width: 500px; /* Max width to ensure it doesn't get too large */
+            max-width: 480px; /* Max width to ensure it doesn't get too large */
             margin-bottom: 40px;
         }
         .footer {
@@ -148,3 +148,4 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>
+
